@@ -1,0 +1,78 @@
+optimizer='sgd':
+
+sgd stands for Stochastic Gradient Descent, a popular optimization algorithm used for training deep learning models.
+The optimizer is responsible for adjusting the model’s weights to minimize the loss function.
+sgd updates weights in small steps using gradients from each batch, which can help the model converge over time.
+loss=tf.keras.losses.SparseCategoricalCrossentropy():
+
+SparseCategoricalCrossentropy is a loss function suitable for classification tasks where the target labels are integers rather than one-hot encoded arrays.
+It computes the cross-entropy loss, a measure of the difference between the true class probability and the model’s predicted probability for the true class.
+This loss function is commonly used for multi-class classification where each instance belongs to a single class out of multiple possible classes.
+metrics=['accuracy']:
+
+This specifies that the model should track accuracy as a performance metric during training and evaluation.
+Accuracy is a straightforward metric indicating the percentage of correct predictions over the total number of predictions.
+By setting this metric, Keras will output the model's accuracy at the end of each training epoch, giving insight into how well the model is performing on the training data.
+
+
+To use an autoencoder for anomaly detection on a credit card dataset, the general approach is as follows:
+
+Understand the Dataset:
+
+Credit card datasets often have features related to transaction amounts, types, locations, etc.
+Anomaly detection targets fraudulent transactions, which are usually a small fraction of the data.
+Preprocess the Data:
+
+Normalize the features to scale them appropriately for model training.
+Separate the data into training and testing sets. In anomaly detection, it’s common to train the model on "normal" (non-fraudulent) transactions only, so the autoencoder learns the patterns of normal behavior.
+Build the Autoencoder Model:
+
+Design an autoencoder with encoder and decoder layers. The encoder reduces the dimensionality, capturing important features, while the decoder reconstructs the input.
+Use a loss function like Mean Squared Error (MSE) to measure reconstruction error.
+Train the Autoencoder:
+
+Train the model on the normal transactions. The model will learn to reconstruct these transactions with low reconstruction error.
+Detect Anomalies:
+
+After training, pass both normal and potentially fraudulent transactions through the autoencoder.
+Calculate the reconstruction error for each transaction. If the error exceeds a certain threshold, classify it as an anomaly (potential fraud).
+Evaluate Performance:
+
+Use metrics like precision, recall, and F1 score to evaluate anomaly detection performance on labeled test data, if available.
+
+
+CBOW
+
+
+This code is implementing a simple word embedding model using a neural network. It processes a sample text data on deep learning topics, tokenizes it, generates context-target pairs, and trains a neural network model to learn word embeddings. Here’s a step-by-step explanation of what each part does:
+
+1. Text Preprocessing
+data contains a sample text about deep learning.
+sentences = data.split('.') splits the text into sentences using the period as a separator.
+clean_sent stores each sentence after it’s cleaned by removing non-alphanumeric characters and single letters, and converting to lowercase.
+2. Tokenization
+The Tokenizer from Keras is used to create a vocabulary of words from the cleaned sentences.
+sequences = tokenizer.texts_to_sequences(clean_sent) converts each cleaned sentence into a list of integers, where each integer represents a word from the vocabulary.
+3. Index Mapping
+index_to_word and word_to_index dictionaries map between word indices and the actual words, useful for interpreting the embedding layer output and predictions.
+4. Generating Context-Target Pairs
+Context and Target Creation:
+For each word in a sentence (excluding the first and last context_size words), the code identifies the target word at position i and its surrounding words as the context.
+contexts holds lists of words surrounding each target, and targets contains the actual words to be predicted based on the context.
+This setup is for a word2vec-style context-prediction model.
+5. Embedding Model Setup
+Embedding Layer: Maps each word index in the vocabulary to a dense vector of emb_size dimensions.
+Lambda Layer: Computes the average of the embeddings from the context words to produce a single representation of the context.
+Dense Layers: The model has two hidden layers with ReLU activation to learn higher-level representations, followed by an output layer with softmax for word prediction.
+Compile and Train:
+The model uses sparse categorical cross-entropy loss and adam optimizer to predict the target word based on its context.
+history = model.fit(x, y, epochs=80) trains the model for 80 epochs.
+6. Visualization of Embeddings
+After training, the embeddings are extracted using model.get_weights()[0].
+PCA reduces the dimensionality of the embeddings to 2 for visualization purposes, which can help us visualize word relationships in 2D space.
+7. Testing the Model
+test_sentences contains some example phrases to test the model’s ability to predict the next word in the context.
+For each test sentence, the code:
+Converts the words into their respective indices.
+Predicts the next likely word based on the model, then maps the predicted index back to the actual word.
+In summary, this code simulates how word embeddings can be learned by predicting a target word from its surrounding context, following a structure similar to skip-gram or CBOW (Continuous Bag of Words) models in word2vec. It provides a simple introduction to word embedding models and how context-based prediction works in NLP.
